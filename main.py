@@ -28,6 +28,15 @@ class MyWidget(QMainWindow):
                 else:
                     self.table.setItem(i, j, QTableWidgetItem(str(elem)))
 
+    def addEdit_db(self, parameters):
+        if parameters[0] in self.cur.execute("""SELECT ID from coffee""").fetchall():
+            self.cur.execute("""UPDATE coffee SET roast_power=?, ground/in_grains=?, taste=?, price=?, volume=? 
+WHERE ID=?""", *(parameters[1:] + parameters[0]))
+        else:
+            self.cur.execute("""INSERT INTO coffee(name_of_sort, roast_power, ground/in_grains, taste, price, volume)
+VALUES(?, ?, ?, ?, ?, ?)""", *parameters)
+        self.con.commit()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
